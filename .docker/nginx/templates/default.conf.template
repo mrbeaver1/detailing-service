@@ -1,0 +1,113 @@
+server {
+    server_name frontend;
+    root /var/www/html/frontend/web;
+    listen 80;
+
+    index index.php;
+
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+
+    # отключаем обработку запросов фреймворком к несуществующим статичным файлам
+    location ~ \.(js|css|png|jpg|gif|swf|ico|pdf|mov|fla|zip|rar)$ {
+        try_files $uri =404;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass ${PHP_FRONTEND_UPSTREAM_CONTAINER}:${PHP_UPSTREAM_PORT};
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_read_timeout 300;
+        fastcgi_send_timeout 300;
+        fastcgi_connect_timeout 300;
+    }
+
+    location ~ \.php$ {
+        return 404;
+    }
+
+    error_log  /var/log/nginx/slava_front_error.log;
+    access_log /var/log/nginx/slava_front_access.log;
+}
+
+server {
+    server_name admin;
+    root /var/www/html/backend/web;
+    listen 80;
+
+    index index.php;
+
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+
+    # отключаем обработку запросов фреймворком к несуществующим статичным файлам
+    location ~ \.(js|css|png|jpg|gif|swf|ico|pdf|mov|fla|zip|rar)$ {
+        try_files $uri =404;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass ${PHP_ADMIN_UPSTREAM_CONTAINER}:${PHP_UPSTREAM_PORT};
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_read_timeout 300;
+        fastcgi_send_timeout 300;
+        fastcgi_connect_timeout 300;
+    }
+
+    location ~ \.php$ {
+        return 404;
+    }
+
+    error_log  /var/log/nginx/slava_admin_error.log;
+    access_log /var/log/nginx/slava_admin_access.log;
+}
+
+server {
+    server_name account;
+    root /var/www/html/account/web;
+    listen 80;
+
+    index index.php;
+
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+
+    # отключаем обработку запросов фреймворком к несуществующим статичным файлам
+    location ~ \.(js|css|png|jpg|gif|swf|ico|pdf|mov|fla|zip|rar)$ {
+        try_files $uri =404;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    location ~ ^/index\.php(/|$) {
+        fastcgi_pass ${PHP_ACCOUNT_UPSTREAM_CONTAINER}:${PHP_UPSTREAM_PORT};
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_read_timeout 300;
+        fastcgi_send_timeout 300;
+        fastcgi_connect_timeout 300;
+    }
+
+    location ~ \.php$ {
+        return 404;
+    }
+
+    error_log  /var/log/nginx/slava_admin_error.log;
+    access_log /var/log/nginx/slava_admin_access.log;
+}

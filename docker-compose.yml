@@ -1,0 +1,67 @@
+services:
+  php-fpm-front:
+    image: 'detailing-front-php-fpm:latest'
+    restart: always
+    environment:
+      YII_DEBUG: ${YII_DEBUG}
+      YII_ENV: ${YII_ENV}
+    volumes:
+      - ./:/var/www/html
+
+  php-fpm-lk:
+    image: 'detailing-lk-php-fpm:latest'
+    restart: always
+    environment:
+      YII_DEBUG: ${YII_DEBUG}
+      YII_ENV: ${YII_ENV}
+    volumes:
+      - ./:/var/www/html
+
+  php-fpm-admin:
+    image: 'detailing-admin-php-fpm:latest'
+    restart: always
+    environment:
+      YII_DEBUG: ${YII_DEBUG}
+      YII_ENV: ${YII_ENV}
+    volumes:
+      - ./:/var/www/html
+
+  nginx:
+    image: 'slava-nginx:latest'
+    restart: always
+    environment:
+      PHP_FRONTEND_UPSTREAM_CONTAINER: ${PHP_FRONTEND_UPSTREAM_CONTAINER}
+      PHP_ADMIN_UPSTREAM_CONTAINER: ${PHP_ADMIN_UPSTREAM_CONTAINER}
+      PHP_ACCOUNT_UPSTREAM_CONTAINER: ${PHP_ACCOUNT_UPSTREAM_CONTAINER}
+      PHP_UPSTREAM_PORT: ${PHP_UPSTREAM_PORT}
+    volumes:
+      - ./frontend/web:/var/www/html/frontend/web
+      - ./backend/web:/var/www/html/backend/web
+      - ./account/web:/var/www/html/account/web
+      - ./.docker/nginx/templates:/etc/nginx/templates
+    ports:
+      - ${DOCKER_NGINX_PORT}:80
+    depends_on:
+      - php-fpm-front
+      - php-fpm-lk
+      - php-fpm-admin
+  db:
+    image: mariadb:10.11.2
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes:
+      - mysql:/var/lib/mysql
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "100m"
+
+volumes:
+  mysql:

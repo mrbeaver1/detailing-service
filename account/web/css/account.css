@@ -1,0 +1,186 @@
+:root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --accent: #e74c3c;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --sidebar-width: 280px;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: var(--dark);
+}
+
+/* Sidebar */
+.account-sidebar {
+    width: var(--sidebar-width);
+    min-height: 100vh;
+    background: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    left: 0;
+    top: 0;
+    transition: all 0.3s;
+    z-index: 1000;
+}
+
+.account-sidebar-header {
+    padding: 1.5rem;
+    background: var(--primary);
+    color: white;
+    text-align: center;
+}
+
+.account-sidebar-header .user-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--secondary);
+    object-fit: cover;
+    margin-bottom: 1rem;
+}
+
+.account-sidebar-menu {
+    padding: 0;
+    list-style: none;
+}
+
+.account-sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: var(--dark);
+    text-decoration: none;
+    transition: all 0.3s;
+    border-left: 3px solid transparent;
+}
+
+.account-sidebar-menu li a:hover,
+.account-sidebar-menu li a.active {
+    background-color: rgba(52, 152, 219, 0.1);
+    border-left-color: var(--secondary);
+    color: var(--secondary);
+}
+
+.account-sidebar-menu li a i {
+    width: 24px;
+    text-align: center;
+    margin-right: 10px;
+    color: var(--secondary);
+}
+
+/* Main Content */
+.account-content {
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
+
+/* Header */
+.account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.account-header h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0;
+    color: var(--primary);
+}
+
+/* Cards */
+.account-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s;
+}
+
+.account-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.account-card-header {
+    background-color: var(--primary);
+    color: white;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+}
+
+/* Badges */
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-completed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-canceled {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Buttons */
+.btn-account {
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .account-sidebar {
+        left: -100%;
+    }
+
+    .account-sidebar.active {
+        left: 0;
+    }
+
+    .account-content {
+        margin-left: 0;
+    }
+
+    .sidebar-toggle {
+        display: block !important;
+    }
+}
+
+/* Toggle button */
+.sidebar-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 999;
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
