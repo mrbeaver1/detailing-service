@@ -16,8 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Обновить запись', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Удалить запись', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
@@ -29,12 +29,31 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'path',
-            'alt',
-            'created_at',
-            'updated_at',
-            'deleted_at',
+            [
+                'attribute' => 'id',
+                'label' => 'Номер работы',
+            ],
+            [
+                'attribute' => 'path',
+                'label' => 'Фото',
+                'format' => ['image', ['width' => '70']],
+                'value' => function ($model) {
+                    $path = $model->path;
+                    $options = [
+                        'http' => [
+                            'header' => "User-Agent: MyApp/1.0 (https://example.com; contact@example.com)\r\n"
+                        ]
+                    ];
+                    $context = stream_context_create($options);
+                    $base64 = $path === null ? '' : base64_encode(file_get_contents($model->path, false, $context));
+
+                    return 'data:image/png;base64,' . $base64;
+                }
+            ],
+            [
+                'attribute' => 'alt',
+                'label' => 'Описание',
+            ],
         ],
     ]) ?>
 

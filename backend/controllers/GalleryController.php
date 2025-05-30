@@ -8,6 +8,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * GalleryController implements the CRUD actions for Gallery model.
@@ -81,8 +82,14 @@ class GalleryController extends Controller
         $model = new Gallery();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load($this->request->post())) {
+                $model->uploadedFile = UploadedFile::getInstance($model, 'uploadedFile');
+                $model->created_at = date('Y-m-d H:i:s');
+                $model->updated_at = date('Y-m-d H:i:s');
+
+                if ($model->validate() && $model->upload() && $model->save(false)) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
         } else {
             $model->loadDefaultValues();
@@ -104,8 +111,13 @@ class GalleryController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load($this->request->post())) {
+            $model->uploadedFile = UploadedFile::getInstance($model, 'uploadedFile');
+            $model->updated_at = date('Y-m-d H:i:s');
+
+            if ($model->validate() && $model->upload() && $model->save(false)) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [

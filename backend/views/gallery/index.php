@@ -28,12 +28,31 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            'id',
-            'path',
-            'alt',
-//            'created_at',
-//            'updated_at',
-            //'deleted_at',
+            [
+                'attribute' => 'id',
+                'label' => 'Номер работы',
+            ],
+            [
+                'attribute' => 'path',
+                'label' => 'Фото',
+                'format' => ['image', ['width' => '70']],
+                'value' => function ($model) {
+                    $path = $model->path;
+                    $options = [
+                        'http' => [
+                            'header' => "User-Agent: MyApp/1.0 (https://example.com; contact@example.com)\r\n"
+                        ]
+                    ];
+                    $context = stream_context_create($options);
+                    $base64 = $path === null ? '' : base64_encode(file_get_contents($model->path, false, $context));
+
+                    return 'data:image/png;base64,' . $base64;
+                }
+            ],
+            [
+                'attribute' => 'alt',
+                'label' => 'Описание',
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Gallery $model, $key, $index, $column) {

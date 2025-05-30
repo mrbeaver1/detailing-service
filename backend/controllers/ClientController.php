@@ -3,12 +3,15 @@
 namespace backend\controllers;
 
 use backend\models\CreateClientForm;
+use backend\models\UpdateClientForm;
 use common\models\User;
 use common\models\search\ClientSearch;
+use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * ClientController implements the CRUD actions for User model.
@@ -81,8 +84,14 @@ class ClientController extends Controller
     {
         $model = new CreateClientForm();
 
-        if ($model->load($this->request->post()) && $model->create()) {
-            return $this->redirect(['index']);
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post())) {
+                $model->uploadedFile = UploadedFile::getInstance($model, 'uploadedFile');
+
+                if ($model->validate() && $model->upload() && $model->create()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
 
         return $this->render('create', [
@@ -101,12 +110,26 @@ class ClientController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $form = new UpdateClientForm();
+        $form->surname = $model->surname;
+        $form->id = $model->id;
+        $form->name = $model->name;
+        $form->patronymic = $model->patronymic;
+        $form->email = $model->email;
+        $form->birthday = $model->birthday;
+        $form->phone = $model->phone;
+        $form->file = $model->avatar;
+
+        if ($form->load($this->request->post())) {
+            $form->uploadedFile = UploadedFile::getInstance($form, 'uploadedFile');
+
+            if ($form->validate() && $form->upload() && $form->update()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
-            'model' => $model,
+            'model' => $form,
         ]);
     }
 

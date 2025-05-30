@@ -10,30 +10,40 @@ use yii\grid\GridView;
 /** @var common\models\search\CarSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Cars';
+$this->title = 'Мои автомобили';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="car-index">
+    <div class="card-header account-card-header d-flex justify-content-between align-items-center">
+        <span><?= Html::encode($this->title) ?></span>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Car', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
+        <?= Html::a('Добавить автомобиль', ['create'], ['class' => 'btn btn-sm btn-light']) ?>
+    </div>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="card-body">
+        <div class="table-responsive">
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'layout' => "{items}\n{pager}\n{summary}",
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'user_id',
-            'name',
-            'year_of_production',
-            'color',
+            [
+                'attribute' => 'name',
+                'label' => 'Марка',
+            ],
+            [
+                'attribute' => 'year_of_production',
+                'label' => 'Год выпуска',
+            ],
+            [
+                'attribute' => 'color',
+                'label' => 'Цвет',
+            ],
+            [
+                'attribute' => 'registration_number',
+                'label' => 'Рег. Номер',
+            ],
             //'registration_number',
             //'created_at',
             //'updated_at',
@@ -47,5 +57,9 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
+        </div>
+    </div>
+
 
 </div>
+

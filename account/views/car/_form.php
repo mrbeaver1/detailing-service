@@ -12,24 +12,18 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'user_id')->textInput() ?>
+    <?= $form->field($model, 'user_id')->hiddenInput(['value' => Yii::$app->user->id])->label(false) ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true])->label('Марка автомобиля') ?>
 
-    <?= $form->field($model, 'year_of_production')->textInput() ?>
+    <?= $form->field($model, 'year_of_production')->textInput()->label('Год выпуска') ?>
 
-    <?= $form->field($model, 'color')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'color')->textInput(['maxlength' => true])->label('Цвет') ?>
 
-    <?= $form->field($model, 'registration_number')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
-
-    <?= $form->field($model, 'deleted_at')->textInput() ?>
+    <?= $form->field($model, 'registration_number')->textInput(['maxlength' => true])->label('Рег. Номер') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h6 class="text-muted mb-2">Новые клиенты</h6>
-                        <h3 class="mb-0">5</h3>
+                        <h3 class="mb-0"><?= $newClients ?></h3>
                     </div>
                     <div class="card-icon text-success">
                         <i class="fas fa-user-plus"></i>
@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h6 class="text-muted mb-2">Выручка</h6>
-                        <h3 class="mb-0">85,400 ₽</h3>
+                        <h3 class="mb-0"><?= $revenue ?> ₽</h3>
                     </div>
                     <div class="card-icon text-info">
                         <i class="fas fa-ruble-sign"></i>
@@ -63,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h6 class="text-muted mb-2">Отзывы</h6>
-                        <h3 class="mb-0">24</h3>
+                        <h3 class="mb-0"><?=$reviews?></h3>
                     </div>
                     <div class="card-icon text-warning">
                         <i class="fas fa-star"></i>
@@ -115,14 +115,8 @@ $this->params['breadcrumbs'][] = $this->title;
                             [
                                 'attribute' => 'status',
                                 'label' => 'Статус',
-                                'content' => function($model) {
-                                    $statuses = [
-                                        'pending' => ['text' => 'Ожидание', 'class' => 'status-pending'],
-                                        'confirmed' => ['text' => 'Подтверждено', 'class' => 'status-active'],
-                                        'canceled' => ['text' => 'Отменено', 'class' => 'status-canceled'],
-                                    ];
-                                    $status = $statuses[$model->status] ?? $statuses['pending'];
-                                    return Html::tag('span', $status['text'], ['class' => 'status-badge ' . $status['class']]);
+                                'value' => function ($model) {
+                                    return $model->orderStatus?->name;
                                 }
                             ],
                             [
@@ -242,25 +236,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="row">
                     <div class="col-6 mb-3">
                         <div class="p-3 border rounded text-center">
-                            <h4 class="mb-0">24</h4>
+                            <h4 class="mb-0"><?=$ordersCountForWeek?></h4>
                             <small class="text-muted">Записей за неделю</small>
                         </div>
                     </div>
                     <div class="col-6 mb-3">
                         <div class="p-3 border rounded text-center">
-                            <h4 class="mb-0">8</h4>
+                            <h4 class="mb-0"><?= $newClients ?></h4>
                             <small class="text-muted">Новых клиентов</small>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="p-3 border rounded text-center">
-                            <h4 class="mb-0">142,500 ₽</h4>
+                            <h4 class="mb-0"><?= $revenueForMonth ?> ₽</h4>
                             <small class="text-muted">Выручка за месяц</small>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="p-3 border rounded text-center">
-                            <h4 class="mb-0">4.8</h4>
+                            <h4 class="mb-0"><?=$reviewsAvg?></h4>
                             <small class="text-muted">Средняя оценка</small>
                         </div>
                     </div>

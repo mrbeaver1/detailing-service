@@ -32,10 +32,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             [
                 'attribute' => 'avatar',
-                'label' => 'Аватар',
-                'format' => 'html',
+                'label' => 'Фото',
+                'format' => ['image', ['width' => '70']],
                 'value' => function ($model) {
-                    return Html::img($model->avatar, ['width' => '70']);
+                    $path = $model->avatar;
+                    $options = [
+                        'http' => [
+                            'header' => "User-Agent: MyApp/1.0 (https://example.com; contact@example.com)\r\n"
+                        ]
+                    ];
+                    $context = stream_context_create($options);
+                    $base64 = $path === null ? '' : base64_encode(file_get_contents($model->avatar, false, $context));
+
+                    return 'data:image/png;base64,' . $base64;
                 }
             ],
             [

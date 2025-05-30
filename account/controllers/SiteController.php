@@ -49,11 +49,18 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $user = Yii::$app->user->identity;
-        $activeBookings = Order::find()
+        $lasBookings = Order::find()
             ->where(['client_id' => $user->id])
+            ->andWhere(['<>', 'status', 4])
             ->orderBy(['date' => SORT_ASC])
             ->limit(5)
             ->all();
+
+        $activeBookingsCount = Order::find()
+            ->where(['client_id' => $user->id])
+            ->andWhere(['<>', 'status', 4])
+            ->orderBy(['date' => SORT_ASC])
+            ->count();
 
         $cars = Car::find()->where(['user_id' => $user->id])->all();
 
@@ -67,23 +74,13 @@ class SiteController extends Controller
 
         return $this->render('index', [
             'user' => $user,
-            'activeBookings' => $activeBookings,
+            'activeBookings' => $lasBookings,
             'cars' => $cars,
-            'activeBookingsCount' => count($activeBookings),
+            'activeBookingsCount' => $activeBookingsCount,
             'carsCount' => count($cars),
             'averageRating' => $averageRating,
             'discount' => $discount->discount ?? 0,
         ]);
-    }
-
-    public function actionBookings()
-    {
-        // Логика для раздела "Мои записи"
-    }
-
-    public function actionCars()
-    {
-        // Логика для раздела "Мои автомобили"
     }
 
     public function actionLogin()

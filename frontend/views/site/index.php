@@ -1,5 +1,6 @@
 <?php
 
+use common\models\Review;
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
 
@@ -84,7 +85,16 @@ $this->title = 'Premium Detailing - Профессиональный детей�
             <?php foreach ($galleryItems as $item): ?>
                 <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="gallery-item">
-                        <?= Html::img($item['path'], ['class' => 'img-fluid', 'alt' => $item['alt']]) ?>
+                        <?php
+                        $options = [
+                            'http' => [
+                                'header' => "User-Agent: MyApp/1.0 (https://example.com; contact@example.com)\r\n"
+                            ]
+                        ];
+                        $context = stream_context_create($options);
+                        $src = $item['path'] === null ? '' : 'data:image/png;base64, ' . base64_encode(file_get_contents($item['path'], false, $context) ?? '' )
+                        ?>
+                        <?= Html::img($src, ['class' => 'img-fluid', 'alt' => $item['alt']]) ?>
                         <div class="gallery-overlay">
                             <i class="fas fa-search-plus text-white fs-3"></i>
                         </div>
@@ -104,51 +114,47 @@ $this->title = 'Premium Detailing - Профессиональный детей�
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="testimonial-slider">
+                    <?php foreach (Review::find()->all() as $review): ?>
+                    <?php
+                    $options = [
+                        'http' => [
+                            'header' => "User-Agent: MyApp/1.0 (https://example.com; contact@example.com)\r\n"
+                        ]
+                    ];
+                    $context = stream_context_create($options);
+                    $src = $review->user?->avatar === null ? '' : 'data:image/png;base64, ' . base64_encode(file_get_contents($review->user?->avatar, false, $context) ?? '' )
+                    ?>
                     <div class="testimonial text-center p-4 bg-white rounded shadow-sm active">
-                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Клиент" class="rounded-circle mb-3" width="80" height="80">
-                        <p class="mb-3">"Отличный сервис! Автомобиль после полного детейлинга выглядит как новый. Очень внимательные мастера, все сделали качественно и в срок. Рекомендую!"</p>
-                        <div class="client-rating mb-3">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <h5 class="fw-bold">Александр Петров</h5>
-                    </div>
 
-                    <div class="testimonial text-center p-4 bg-white rounded shadow-sm">
-                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Клиент" class="rounded-circle mb-3" width="80" height="80">
-                        <p class="mb-3">"Заказывала керамическое покрытие для своей новой машины. Результат превзошел все ожидания! Машина блестит, вода скатывается, а уход стал намного проще. Спасибо!"</p>
+                        <?= Html::img($src, [
+                            'alt' => 'Клиент',
+                            'class' => 'rounded-circle mb-3',
+                            'width' => '80',
+                            'height' => '80',
+                        ]) ?>
+                        <p class="mb-3"><?=$review->text?></p>
                         <div class="client-rating mb-3">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <h5 class="fw-bold">Екатерина Смирнова</h5>
-                    </div>
+                        <?php
+                        $farIconsCount = 5 - $review->rating;
+                        for ($i = 1; $i <= $review->rating; $i++) {
+                            echo '<i class="fa fa-star"></i>';
+                        }
 
-                    <div class="testimonial text-center p-4 bg-white rounded shadow-sm">
-                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Клиент" class="rounded-circle mb-3" width="80" height="80">
-                        <p class="mb-3">"Регулярно пользуюсь услугами детейлингового ухода. Автомобиль всегда в идеальном состоянии, а цена более чем адекватная за такое качество. Отдельное спасибо за чистку салона - удалили даже самые старые пятна!"</p>
-                        <div class="client-rating mb-3">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-<!--                            <i class="fas fa-star-half-alt"></i>-->
+                        if ($farIconsCount !== 0) {
+                            for ($i = 1; $i <= $farIconsCount; $i++) {
+                                echo '<i class="far fa-star"></i>';
+                            }
+                        }
+                        ?>
                         </div>
-                        <h5 class="fw-bold">Дмитрий Иванов</h5>
+                        <h5 class="fw-bold"><?=$review->user?->surname . ' ' . $review->user?->name . ' ' . $review->user?->patronymic ?></h5>
                     </div>
-                </div>
+                    <?php endforeach; ?>
 
                 <div class="d-flex justify-content-center mt-4">
-                    <button class="btn btn-sm btn-secondary rounded-circle mx-1 slider-dot active" data-slide="0"></button>
-                    <button class="btn btn-sm btn-secondary rounded-circle mx-1 slider-dot" data-slide="1"></button>
-                    <button class="btn btn-sm btn-secondary rounded-circle mx-1 slider-dot" data-slide="2"></button>
+                    <?php for ($i = 0; $i < Review::find()->count(); $i++): ?>
+                    <button class="btn btn-sm btn-secondary rounded-circle mx-1 slider-dot" data-slide=<?=$i ?>></button>
+                    <?php endfor; ?>
                 </div>
             </div>
         </div>

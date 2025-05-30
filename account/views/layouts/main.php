@@ -33,7 +33,7 @@ AppAsset::register($this);
         <div class="account-sidebar-header">
             <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="user-avatar">
             <h5 class="mb-1"><?= Yii::$app->user->identity?->name ?></h5>
-            <p class="text-muted mb-0">Клиент с <?= date('d.m.Y', Yii::$app->user->identity?->created_at) ?></p>
+            <p class="text-muted mb-0">Клиент с <?= Yii::$app->user->identity?->created_at?></p>
         </div>
 
         <ul class="account-sidebar-menu">

@@ -70,7 +70,12 @@ class CarController extends Controller
         $model = new Car();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+            if ($model->load($this->request->post())) {
+                $model->created_at = date('Y-m-d H:i:s');
+                $model->updated_at = date('Y-m-d H:i:s');
+
+                $model->save();
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -93,7 +98,11 @@ class CarController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->created_at = date('Y-m-d H:i:s');
+
+            $model->save();
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

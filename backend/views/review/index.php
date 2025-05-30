@@ -1,49 +1,69 @@
 <?php
 
 use common\models\Review;
-use yii\grid\ActionColumn;
-use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\grid\ActionColumn;
+use yii\grid\GridView;
 
 /** @var yii\web\View $this */
-/** @var \common\models\search\ReviewSearch $searchModel */
+/** @var backend\models\search\ReviewSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Reviews';
+$this->title = 'Отзывы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="review-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><?= Html::encode($this->title) ?></h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
 
-    <p>
-        <?= Html::a('Create Review', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+                <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'layout' => "{items}\n{pager}\n{summary}",
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'user_id',
-            'text:ntext',
-            'rating',
-            'created_at',
-            //'updated_at',
-            //'deleted_at',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Review $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                'attribute' => 'id',
+                'label' => 'Номер отзыва',
+            ],
+            [
+                'attribute' => 'user_id',
+                'label' => 'Автор отзыва',
+                'value' => function ($model) {
+                    return $model->user?->surname.' '.$model->user?->name.' '.$model->user?->patronymic;
+                }
+            ],
+            [
+                'attribute' => 'text',
+                'label' => 'Текст отзыва',
+                'format' => 'ntext',
+            ],
+            [
+                'attribute' => 'rating',
+                'label' => 'Количество звезд',
+            ],
+            [
+                'class' => ActionColumn::class,
+                'template' => '{view} ',
+                'buttons' => [
+                    'view' => function($url, $model) {
+                        return Html::a('<i class="fas fa-eye"></i>', ['view', 'id' => $model->id], [
+                            'class' => 'btn btn-sm btn-outline-secondary',
+                            'title' => 'Посмотреть'
+                        ]);
+                    },
+                ]
             ],
         ],
     ]); ?>
-
-
-</div>
+            </div>
+        </div>
+    </div>

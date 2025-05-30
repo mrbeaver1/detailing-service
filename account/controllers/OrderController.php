@@ -83,6 +83,9 @@ class OrderController extends Controller
 
                 $model->personal_price = $personalPrice;
 
+                $model->created_at = date('Y-m-d H:i:s');
+                $model->updated_at = date('Y-m-d H:i:s');
+
                 $model->save();
 
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -107,7 +110,11 @@ class OrderController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->created_at = date('Y-m-d H:i:s');
+
+            $model->save();
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

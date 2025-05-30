@@ -6,8 +6,8 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\Review $model */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Reviews', 'url' => ['index']];
+$this->title = 'Отзыв №' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Мои отзывы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -16,8 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Изменит отзыв', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Удалить отзыв', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
@@ -29,13 +29,19 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'user_id',
-            'text:ntext',
-            'rating',
-            'created_at',
-            'updated_at',
-            'deleted_at',
+            [
+                'attribute' => 'id',
+                'label' => 'Номер отзыва',
+            ],
+            [
+                'attribute' => 'text',
+                'label' => 'Текст отзыва',
+                'format' => 'ntext',
+            ],
+            [
+                'attribute' => 'rating',
+                'label' => 'Количество звезд',
+            ],
         ],
     ]) ?>
 

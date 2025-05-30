@@ -1,4 +1,6 @@
 <?php
+
+use common\models\Review;
 use yii\helpers\Url;
 ?>
 
@@ -59,8 +61,13 @@ use yii\helpers\Url;
             <a href="<?= Url::to(['/review/index']) ?>" class="<?= Yii::$app->controller->id == 'review' ? 'active' : '' ?>">
                 <i class="fas fa-comment-alt"></i>
                 <span>Отзывы</span>
-<!--                <span class="badge bg-warning ms-auto"><\backend\models\Review::getPendingCount() </span>-->
-                <span class="badge bg-warning ms-auto"><?= 7 ?></span>
+                <span class="badge bg-warning ms-auto"><?= Review::find()->count() ?> </span>
+            </a>
+        </li>
+        <li>
+            <a href="<?= Url::to(['/promo/index']) ?>" class="<?= Yii::$app->controller->id == 'promo' ? 'active' : '' ?>">
+                <i class="fa-solid fa-percent"></i>
+                <span>Программы лояльности</span>
             </a>
         </li>
     </ul>

@@ -3,7 +3,9 @@
 namespace backend\controllers;
 
 use common\models\Order;
+use common\models\Review;
 use common\models\User;
+use DateTimeImmutable;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
@@ -56,18 +58,19 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-//        return $this->render('index', [
-//            'ordersCount' => \common\models\Order::getTodayCount(),
-//            'newClients' => \common\models\Client::getNewCount(),
-//            'revenue' => \common\models\Order::getMonthRevenue(),
-//            'reviews' => \common\models\Review::getNewCount(),
-//        ]);
+        $reviewCount = Review::find()->count();
+        $reviewSum = Review::find()->sum('rating');
+
+        $reviewAvg = $reviewCount == 0 ? 0 : $reviewSum / $reviewCount;
 
         return $this->render('index', [
-            'ordersCount' => 50,
-            'newClients' => 100,
-            'revenue' => 7000,
-            'reviews' => 5,
+            'ordersCount' => Order::find()->where(['status' => 1])->count(),
+            'ordersCountForWeek' => Order::find()->where(['status' => 1])->andWhere(['between', 'created_at', (new DateTimeImmutable('first day of this week'))->format('Y-m-d 00:00:00'), (new DateTimeImmutable())->format('Y-m-d H:i:s')])->count(),
+            'newClients' => User::find()->where(['between', 'created_at', (new DateTimeImmutable('first day of this month'))->format('Y-m-d 00:00:00'), (new DateTimeImmutable())->format('Y-m-d H:i:s')])->andWhere(['role' => 'client'])->count(),
+            'revenue' => Order::find()->where(['status' => 4])->sum('personal_price'),
+            'revenueForMonth' => Order::find()->where(['status' => 4])->andWhere(['between', 'updated_at', (new DateTimeImmutable('first day of this month'))->format('Y-m-d 00:00:00'), (new DateTimeImmutable())->format('Y-m-d H:i:s')])->sum('personal_price'),
+            'reviews' => $reviewCount,
+            'reviewsAvg' => round($reviewAvg, 1),
             'recentOrders' => Order::find()->orderBy(['id' => SORT_DESC])->limit(5)->all(),
             'recentClients' => User::find()->where(['role' => 'client'])->orderBy(['id' => SORT_DESC])->limit(5)->all(),
         ]);

@@ -44,6 +44,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             }
                         ],
                         [
+                            'attribute' => 'car_id',
+                            'label' => 'Автомобиль',
+                            'value' => function ($model) {
+                                return $model->car?->name;
+                            }
+                        ],
+                        [
                             'attribute' => 'date',
                             'label' => 'Дата и время',
                             'format' => ['date', 'php:d.m.Y H:i:s'],
@@ -51,14 +58,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         [
                             'attribute' => 'status',
                             'label' => 'Статус',
-                            'content' => function($model) {
-                                $statuses = [
-                                    'pending' => ['text' => 'Ожидание', 'class' => 'status-pending'],
-                                    'confirmed' => ['text' => 'Подтверждено', 'class' => 'status-active'],
-                                    'canceled' => ['text' => 'Отменено', 'class' => 'status-canceled'],
-                                ];
-                                $status = $statuses[$model->status] ?? $statuses['pending'];
-                                return Html::tag('span', $status['text'], ['class' => 'status-badge ' . $status['class']]);
+                            'value' => function ($model) {
+                                return $model->orderStatus?->name;
                             }
                         ],
                         [

@@ -10,32 +10,36 @@ use yii\grid\GridView;
 /** @var account\models\search\ReviewSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Reviews';
+$this->title = 'Мои отзывы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="review-index">
+    <div class="card-header account-card-header d-flex justify-content-between align-items-center">
+        <span><?= Html::encode($this->title) ?></span>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Review', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
+        <?= Html::a('Добавить отзыв', ['create'], ['class' => 'btn btn-sm btn-light']) ?>
+    </div>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <div class="card-body">
+        <div class="table-responsive">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'layout' => "{items}\n{pager}\n{summary}",
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'user_id',
-            'text:ntext',
-            'rating',
-            'created_at',
-            //'updated_at',
-            //'deleted_at',
+            [
+                'attribute' => 'id',
+                'label' => 'Номер отзыва',
+            ],
+            [
+                'attribute' => 'text',
+                'label' => 'Текст отзыва',
+                'format' => 'ntext',
+            ],
+            [
+                'attribute' => 'rating',
+                'label' => 'Количество звезд',
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Review $model, $key, $index, $column) {
@@ -45,5 +49,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
-
+        </div>
+    </div>
 </div>

@@ -90,6 +90,8 @@ class OrderController extends Controller
                 $personalPrice = $servicePrice - $servicePrice / 100 * $discountValue;
 
                 $model->personal_price = $personalPrice;
+                $model->created_at = date('Y-m-d H:i:s');
+                $model->updated_at = date('Y-m-d H:i:s');
 
                 $model->save();
 

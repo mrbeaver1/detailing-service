@@ -1,5 +1,6 @@
 <?php
 
+use common\models\Car;
 use common\models\OrderStatus;
 use common\models\Service;
 use common\models\User;
@@ -24,17 +25,22 @@ use yii\widgets\ActiveForm;
     }
     ?>
 
-    <?= $form->field($model, 'client_id')->dropDownList([
-        ArrayHelper::map($users, 'id', 'name'),
-    ]) ?>
+    <?= $form->field($model, 'client_id')->dropDownList(
+        ArrayHelper::map($users, 'id', 'name')
+    )->label("Клиент")
+    ?>
 
-    <?= $form->field($model, 'service_id')->dropDownList([
+    <?= $form->field($model, 'service_id')->dropDownList(
         ArrayHelper::map(Service::find()->all(), 'id', 'name'),
-    ]) ?>
+    )->label('Услуга') ?>
 
-    <?= $form->field($model, 'status')->dropDownList([
+    <?= $form->field($model, 'car_id')->dropDownList(
+        ArrayHelper::map(Car::find()->where(['user_id' => $model->client_id])->all(), 'id', 'name'),
+    )->label('Автомобиль') ?>
+
+    <?= $form->field($model, 'status')->dropDownList(
         ArrayHelper::map(OrderStatus::find()->all(), 'id', 'name'),
-    ]) ?>
+    )->label('Статус') ?>
 
     <?=$form->field($model, 'date')->widget(DateTimePicker::class, [
         'options' => ['placeholder' => 'Введите дату и время записи'],
@@ -42,10 +48,10 @@ use yii\widgets\ActiveForm;
             'autoclose' => true,
             'format' => 'yyyy-mm-dd hh:ii:00'
         ]
-    ]); ?>
+    ])->label('Дата и время записи'); ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

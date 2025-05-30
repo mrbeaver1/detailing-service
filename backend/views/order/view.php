@@ -6,8 +6,8 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\Order $model */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Orders', 'url' => ['index']];
+$this->title = 'Запись №' . $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Записи', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -16,8 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('Изменить запись', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Удалить запись', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
@@ -30,13 +30,39 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'client_id',
-            'service_id',
-            'status',
-            'date',
-            'personal_price',
-            'created_at',
-            'updated_at',
+            [
+                'attribute' => 'client_id',
+                'label' => 'Клиент',
+                'value' => function($model) {
+                    return "{$model->client->surname} {$model->client->name}";
+                }
+            ],
+            [
+                'attribute' => 'service_id',
+                'label' => 'Услуга',
+                'value' => function($model) {
+                    return $model->service->name;
+                }
+            ],
+            [
+                'attribute' => 'car_id',
+                'label' => 'Автомобиль',
+                'value' => function ($model) {
+                    return $model->car?->name;
+                }
+            ],
+            [
+                'attribute' => 'date',
+                'label' => 'Дата и время',
+                'format' => ['date', 'php:d.m.Y H:i:s'],
+            ],
+            [
+                'attribute' => 'status',
+                'label' => 'Статус',
+                'value' => function ($model) {
+                    return $model->orderStatus?->name;
+                }
+            ],
         ],
     ]) ?>
 
