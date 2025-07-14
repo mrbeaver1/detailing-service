@@ -31,7 +31,7 @@ AppAsset::register($this);
     <!-- Sidebar -->
     <div class="account-sidebar" id="accountSidebar">
         <div class="account-sidebar-header">
-            <img src="<?= Yii::$app->user->identity?->avatar ??  "image/no-avatar.jpg" ?>" alt="User" class="user-avatar">
+            <img src="<?= Yii::$app->user->identity?->avatar ??  "https://s3-alpha.figma.com/hub/file/6811745861/6e30d5c6-cf42-4e5e-bebd-0283b97d5fe4-cover.png" ?>" alt="User" class="user-avatar">
             <h5 class="mb-1"><?= Yii::$app->user->identity?->name ?></h5>
             <p class="text-muted mb-0">Клиент с <?= Yii::$app->user->identity?->created_at?></p>
         </div>
