@@ -131,7 +131,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             'delete' => function($url, $model) {
                                 return Html::a('<i class="fas fa-times"></i>', ['/order/delete', 'id' => $model->id], [
                                     'class' => 'btn btn-sm btn-outline-danger',
-                                    'title' => 'Отменить запись'
+                                    'title' => 'Отменить запись',
+                                    'data' => [
+                                        'confirm' => 'Вы действительно хотите удалить эту запись?',
+                                        'method' => 'post',
+                                    ],
                                 ]);
                             }
                         ]
